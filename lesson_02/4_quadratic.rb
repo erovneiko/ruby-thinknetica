@@ -7,9 +7,10 @@ d = (b**2 - 4 * a * c)
 puts "Дискриминант: #{d}"
 
 if d > 0
-	puts "Корни: #{(-b + Math.sqrt(d)) / 2 * a * c}; #{(-b - Math.sqrt(d)) / 2 * a * c}"
+  s = Math.sqrt(d)
+  puts "Корни: #{(-b + s) / 2 * a * c}; #{(-b - s) / 2 * a * c}"
 elsif d == 0
-	puts "Один корень: #{-b / 2 * a * c}"
+  puts "Один корень: #{-b / 2 * a * c}"
 else
-	puts "Корней нет"
+  puts "Корней нет"
 end
