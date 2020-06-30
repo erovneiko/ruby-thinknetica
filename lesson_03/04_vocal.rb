@@ -1,9 +1,7 @@
 hash = Hash.new
 
-alphabet = ('а'..'я').to_a
-
-alphabet.each_index do |i| 
-  hash[alphabet[i]] = i+1 if "аоиеёэыуюя".include?(alphabet[i])
+('а'..'я').each_with_index do |c, i| 
+  hash[c] = i+1 if "аоиеёэыуюя".include?(c)
 end
 
 puts hash
