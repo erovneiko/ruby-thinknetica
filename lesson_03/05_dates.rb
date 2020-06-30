@@ -14,7 +14,7 @@ if year % 4 == 0 && year % 100 != 0 || year % 400 == 0
   months[1] = 29
 end
 
-number = day + months.take(month-1).sum
+number = day + months.take(month - 1).sum
 
 puts "Порядковый номер даты:"
 puts number

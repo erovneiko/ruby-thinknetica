@@ -1,5 +1,5 @@
-goods = Hash.new
-sums = Hash.new
+goods = {}
+sums = {}
 total = 0.0
 
 loop do
@@ -12,10 +12,10 @@ loop do
   price = gets.chomp.to_f
   
   print "Введите количество: "
-  value = gets.chomp.to_f
+  quantity = gets.chomp.to_f
 
-  goods[name] = {price => value}
-  sums[name] = price * value
+  goods[name] = {price: price, quantity: quantity}
+  sums[name] = price * quantity
   total += sums[name]
 end
 

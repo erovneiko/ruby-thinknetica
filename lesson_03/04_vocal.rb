@@ -1,7 +1,7 @@
-hash = Hash.new
+hash = {}
 
-('а'..'я').each_with_index do |c, i| 
-  hash[c] = i+1 if "аоиеёэыуюя".include?(c)
+('а'..'я').each.with_index(1) do |c, i| 
+  hash[c] = i if "аоиеёэыуюя".include?(c)
 end
 
 puts hash

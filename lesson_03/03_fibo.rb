@@ -1,9 +1,9 @@
 fibo = [1, 1]
+
 loop do
-  fibo << fibo.last(2).sum
-  if fibo.last >= 100
-    fibo.delete_at(fibo.size - 1)
-    break
-  end
+  next_number = fibo.last(2).sum
+  break if next_number >= 100
+  fibo << next_number
 end
+
 puts fibo
