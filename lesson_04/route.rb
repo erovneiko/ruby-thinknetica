@@ -2,7 +2,7 @@ class Route
   attr_reader :stations
 
   def initialize(first, last)
-    @stations = [] << first << last
+    @stations = [first, last]
   end
 
   # Добавление станции

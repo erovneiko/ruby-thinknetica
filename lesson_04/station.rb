@@ -15,10 +15,7 @@ class Station
   end
 
   def trains(type = nil)
-    if type
-      @trains.each { |t| t.type == type }
-    else
-      @trains
-    end
+    return @trains unless type
+    @trains.each { |t| t.type == type }    
   end
 end

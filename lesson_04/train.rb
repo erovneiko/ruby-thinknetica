@@ -50,9 +50,6 @@ class Train
 
   # Возврат предыдущей, текущей и следующей станции
   def status
-    return [] \
-      << @route.stations[@route_index - 2] \
-      << @route.stations[@route_index - 1] \
-      << @route.stations[@route_index - 0]
+    return @route.stations[@route_index - 2..@route_index]
   end
 end
