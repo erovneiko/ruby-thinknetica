@@ -32,7 +32,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if stations.select { |station| station.name == name } != []
+        if stations.select{ |station| station.name == name }.any?
           puts "ОШИБКА: такая станция уже существует"
         else
           stations.append(Station.new(name))
@@ -44,7 +44,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if trains.select { |train| train.name == name } != []
+        if trains.select{ |train| train.name == name }.any?
           puts "ОШИБКА: такой поезд уже существует"
         else
           trains.append(PassengerTrain.new(name))
@@ -55,7 +55,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if trains.select { |train| train.name == name } != []
+        if trains.select{ |train| train.name == name }.any?
           puts "ОШИБКА: такой поезд уже существует"
         else
           trains.append(CargoTrain.new(name))
@@ -68,7 +68,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        station = stations.select { |station| station.name == name } [0]
+        station = stations.select{ |station| station.name == name }.first
         if !station
           puts "ОШИБКА: Станция не найдена в общем списке"
         else
@@ -81,7 +81,7 @@ loop do
       else
         routes.append(Route.new(buffer.first, buffer.last))
         if buffer.size > 2
-          buffer[1..buffer.size-2].each() { |name| routes.last.add_station(name) }
+          buffer[1..buffer.size - 2].each { |name| routes.last.add_station(name) }
         end
       end
 
@@ -91,7 +91,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name } [0]
+        train = trains.select{ |train| train.name == name }.first
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -100,7 +100,7 @@ loop do
         loop do
           route = gets.chomp.to_i
           break if route == 0
-          if routes[route - 1] == nil
+          if !routes[route - 1]
             puts "ОШИБКА: маршрут не найден"
           else
             train.route = routes[route - 1]
@@ -115,7 +115,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name } [0]
+        train = trains.select{ |train| train.name == name }.first
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -136,7 +136,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name } [0]
+        train = trains.select{ |train| train.name == name }.first
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -157,7 +157,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name } [0]
+        train = trains.select{ |train| train.name == name }.first
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
