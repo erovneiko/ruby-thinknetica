@@ -5,17 +5,14 @@ module InstanceCounter
   end
 
   module ClassMethods
-    def instances
-      self.instance_variable_get(:@instances)
-    end
+    attr_accessor :instances
   end
 
   module InstanceMethods
     private
       def register_instance
-        instances = self.class.instance_variable_get(:@instances)
-        instances = 0 unless instances
-        self.class.instance_variable_set(:@instances, instances + 1)
+        self.class.instances ||= 0
+        self.class.instances += 1
       end
   end
 end

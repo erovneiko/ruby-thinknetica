@@ -10,13 +10,13 @@ class Train
   attr_accessor :speed  # Набор скорости: speed = number
   attr_reader :route
   attr_reader :cur_station_index
-  @@trains = []
+  @@trains = {}
 
   def initialize(name)
     @name = name
     @wagons = []
     @speed = 0
-    @@trains.append(self)
+    @@trains[name] = self
     register_instance
   end
 
@@ -65,7 +65,8 @@ class Train
     @route.stations[@cur_station_index-2..@cur_station_index]
   end
 
+  # Объект поезда по его номеру
   def self.find(name)
-    @@trains.select { |train| train.name == name }.first
+    @@trains[name]
   end
 end
