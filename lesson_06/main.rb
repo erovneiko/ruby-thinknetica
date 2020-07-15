@@ -5,7 +5,6 @@ require_relative "train_cargo"
 require_relative "wagon_passenger"
 require_relative "wagon_cargo"
 
-stations = []
 trains = []
 routes = []
 
@@ -32,10 +31,10 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if stations.select { |station| station.name == name }.any?
+        if Station.all.select { |station| station.name == name }.any?
           puts "ОШИБКА: такая станция уже существует"
         else
-          stations.append(Station.new(name))
+          Station.new(name)
         end
       end
 
@@ -44,10 +43,10 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if trains.select { |train| train.name == name }.any?
+        if Train.find(name)
           puts "ОШИБКА: такой поезд уже существует"
         else
-          trains.append(PassengerTrain.new(name))
+          PassengerTrain.new(name)
         end
       end
 
@@ -55,10 +54,10 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        if trains.select { |train| train.name == name }.any?
+        if Train.find(name)
           puts "ОШИБКА: такой поезд уже существует"
         else
-          trains.append(CargoTrain.new(name))
+          CargoTrain.new(name)
         end
       end
 
@@ -68,7 +67,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        station = stations.select { |station| station.name == name }.first
+        station = Station.all.select { |station| station.name == name }.first
         if !station
           puts "ОШИБКА: Станция не найдена в общем списке"
         else
@@ -91,7 +90,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name }.first
+        train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -115,7 +114,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name }.first
+        train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -136,7 +135,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name }.first
+        train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -157,7 +156,7 @@ loop do
       loop do
         name = gets.chomp
         break if name == ""
-        train = trains.select { |train| train.name == name }.first
+        train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
       end
@@ -182,7 +181,7 @@ loop do
       end
 
     when "8"
-      stations.each do |station|
+      Station.all.each do |station|
         print station.name
         station.trains.each do |train|
           print " [#{train.name}]"

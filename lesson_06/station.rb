@@ -1,10 +1,17 @@
+require_relative "instance_counter"
+
 class Station
+  include InstanceCounter
+
   attr_reader :name
   attr_reader :trains
+  @@stations = []
 
   def initialize(name)
     @name = name
     @trains = []
+    @@stations.append(self)
+    register_instance
   end
 
   # Прибытие
@@ -20,5 +27,9 @@ class Station
   def trains(type = nil)
     return @trains unless type
     @trains.each { |t| t.type == type }    
+  end
+
+  def self.all
+    @@stations
   end
 end

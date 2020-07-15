@@ -1,14 +1,23 @@
+require_relative "manufacturer"
+require_relative "instance_counter"
+
 class Train
+  include Manufacturer
+  include InstanceCounter
+
   attr_reader :name
   attr_reader :wagons
   attr_accessor :speed  # Набор скорости: speed = number
   attr_reader :route
   attr_reader :cur_station_index
+  @@trains = []
 
   def initialize(name)
     @name = name
     @wagons = []
     @speed = 0
+    @@trains.append(self)
+    register_instance
   end
 
   # Остановка
@@ -54,5 +63,9 @@ class Train
   # Возврат предыдущей, текущей и следующей станции
   def status
     @route.stations[@cur_station_index-2..@cur_station_index]
+  end
+
+  def self.find(name)
+    @@trains.select { |train| train.name == name }.first
   end
 end
