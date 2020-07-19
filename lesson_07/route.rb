@@ -8,6 +8,7 @@ class Route
   def initialize(first, last)
     @stations = [first, last]
     register_instance
+    validate!
   end
 
   # Добавление станции
@@ -18,5 +19,18 @@ class Route
   # Удаление станции
   def delete_station(station)
     @stations.delete(station)
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  private
+
+  def validate!
+    raise "В маршруте не может быть меньше двух станций" if @stations.first == @stations.last
   end
 end

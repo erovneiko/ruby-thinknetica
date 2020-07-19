@@ -16,8 +16,9 @@ class Train
     @name = name
     @wagons = []
     @speed = 0
-    @@trains[name] = self
     register_instance
+    validate!
+    @@trains[name] = self
   end
 
   # Остановка
@@ -68,5 +69,20 @@ class Train
   # Объект поезда по его номеру
   def self.find(name)
     @@trains[name]
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  private
+
+  def validate!
+    raise "Не указан номер поезда" if name.empty?
+    raise "Недопустимый формат номера поезда" if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
+    raise "Такой поезд уже существует" if @@trains[name]
   end
 end

@@ -29,11 +29,11 @@ loop do
       puts "Введите станции:"
       loop do
         name = gets.chomp
-        break if name == ""
-        if Station.all.select { |station| station.name == name }.any?
-          puts "ОШИБКА: такая станция уже существует"
-        else
+        break if name.empty?
+        begin
           Station.new(name)
+        rescue RuntimeError => ex
+          puts ex.message
         end
       end
 
@@ -41,22 +41,24 @@ loop do
       puts "Введите пассажирские поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
-        if Train.find(name)
-          puts "ОШИБКА: такой поезд уже существует"
-        else
-          PassengerTrain.new(name)
+        break if name.empty?
+        begin
+          train = PassengerTrain.new(name)
+          puts "Создан поезд #{train.name}"
+        rescue RuntimeError => ex
+          puts ex.message
         end
       end
 
       puts "Введите грузовые поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
-        if Train.find(name)
-          puts "ОШИБКА: такой поезд уже существует"
-        else
-          CargoTrain.new(name)
+        break if name.empty?
+        begin
+          train = CargoTrain.new(name)
+          puts "Создан поезд #{train.name}"
+        rescue RuntimeError => ex
+          puts ex.message
         end
       end
 
@@ -65,7 +67,7 @@ loop do
       puts "Введите станции маршрута:"
       loop do
         name = gets.chomp
-        break if name == ""
+        break if name.empty?
         station = Station.all.select { |station| station.name == name }.first
         if !station
           puts "ОШИБКА: Станция не найдена в общем списке"
@@ -73,22 +75,21 @@ loop do
           buffer << station
         end
       end
-      if buffer.size < 2
-        puts "ОШИБКА: В маршруте меньше двух станций"
-        gets
-      else
+      begin
         routes.append(Route.new(buffer.first, buffer.last))
-        if buffer.size > 2
-          buffer[1..buffer.size - 2].each { |name| routes.last.add_station(name) }
-        end
+        buffer[1..buffer.size - 2].each { |name| routes.last.add_station(name) }
+      rescue RuntimeError => ex
+        puts ex.message
+        gets
       end
+      # end
 
     when "4"
       train = nil
       puts "Введите название поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
+        break if name.empty?
         train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
@@ -112,7 +113,7 @@ loop do
       puts "Введите название поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
+        break if name.empty?
         train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
@@ -133,7 +134,7 @@ loop do
       puts "Введите название поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
+        break if name.empty?
         train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"
@@ -154,7 +155,7 @@ loop do
       puts "Введите название поезда:"
       loop do
         name = gets.chomp
-        break if name == ""
+        break if name.empty?
         train = Train.find(name)
         break if train
         puts "ОШИБКА: поезд не найден в общем списке"

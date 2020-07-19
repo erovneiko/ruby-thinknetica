@@ -10,8 +10,9 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    @@stations.append(self)
     register_instance
+    validate!
+    @@stations.append(self)
   end
 
   # Прибытие
@@ -31,5 +32,19 @@ class Station
 
   def self.all
     @@stations
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  private
+
+  def validate!
+    raise "Не указано название станции" if name.empty?
+    raise "Такая станция уже существует" if @@stations.select { |station| station.name == name }.any?
   end
 end
