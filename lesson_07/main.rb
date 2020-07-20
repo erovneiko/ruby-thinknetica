@@ -28,37 +28,40 @@ loop do
     when "1"
       puts "Введите станции:"
       loop do
-        name = gets.chomp
-        break if name.empty?
         begin
+          name = gets.chomp
+          break if name.empty?   # Признак окончания ввода списка станций
           Station.new(name)
         rescue RuntimeError => ex
           puts ex.message
+          retry
         end
       end
 
     when "2"
       puts "Введите пассажирские поезда:"
       loop do
-        name = gets.chomp
-        break if name.empty?
         begin
+          name = gets.chomp
+          break if name.empty?   # Признак окончания ввода списка поездов
           train = PassengerTrain.new(name)
           puts "Создан поезд #{train.name}"
         rescue RuntimeError => ex
           puts ex.message
+          retry
         end
       end
 
       puts "Введите грузовые поезда:"
       loop do
-        name = gets.chomp
-        break if name.empty?
         begin
+          name = gets.chomp
+          break if name.empty?   # Признак окончания ввода списка поездов
           train = CargoTrain.new(name)
           puts "Создан поезд #{train.name}"
         rescue RuntimeError => ex
           puts ex.message
+          retry
         end
       end
 
@@ -67,7 +70,7 @@ loop do
       puts "Введите станции маршрута:"
       loop do
         name = gets.chomp
-        break if name.empty?
+        break if name.empty?   # Признак окончания ввода списка станций
         station = Station.all.select { |station| station.name == name }.first
         if !station
           puts "ОШИБКА: Станция не найдена в общем списке"
@@ -82,7 +85,6 @@ loop do
         puts ex.message
         gets
       end
-      # end
 
     when "4"
       train = nil
