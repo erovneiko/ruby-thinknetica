@@ -10,6 +10,7 @@ routes = []
 loop do
   system("clear")
   puts "\
+0. Создать данные
 1. Создать станции
 2. Создать поезда
 3. Создать маршрут
@@ -18,13 +19,78 @@ loop do
 6. Отцепить вагоны
 7. Переместить поезд
 8. Список станций и поездов
-0. Выход"
+9. Занять место или объём в вагоне
+00. Выход"
   print"> "
 
   answer = gets.chomp
   system("clear")
 
   case answer
+    when "0"
+      Station.new("Голутвин")
+      Station.new("Луховицы")
+      Station.new("Кривандино")
+      Station.new("Курская")
+      Station.new("Кусково")
+      Station.new("Реутово")
+      Station.new("Фрязево")
+      Station.new("Павловский Посад")
+      Station.new("Люблино-Сортировочное")
+      Station.new("Царицыно")
+      Station.new("Серпухов")
+      PassengerTrain.new("ПАС-01")
+      PassengerTrain.new("ПАС-02")
+      PassengerTrain.new("ПАС-03")
+      CargoTrain.new("ГРЗ-01")
+      CargoTrain.new("ГРЗ-02")
+      Train.find("ПАС-01").attach(PassengerWagon.new(20))
+      Train.find("ПАС-01").attach(PassengerWagon.new(25))
+      Train.find("ПАС-02").attach(PassengerWagon.new(20))
+      Train.find("ПАС-02").attach(PassengerWagon.new(25))
+      Train.find("ПАС-03").attach(PassengerWagon.new(20))
+      Train.find("ПАС-03").attach(PassengerWagon.new(30))
+      Train.find("ПАС-03").attach(PassengerWagon.new(30))
+      Train.find("ГРЗ-01").attach(CargoWagon.new(100))
+      Train.find("ГРЗ-01").attach(CargoWagon.new(110))
+      Train.find("ГРЗ-01").attach(CargoWagon.new(110))
+      Train.find("ГРЗ-01").attach(CargoWagon.new(100))
+      Train.find("ГРЗ-02").attach(CargoWagon.new(100))
+      Train.find("ГРЗ-02").attach(CargoWagon.new(120))
+      Train.find("ГРЗ-02").attach(CargoWagon.new(120))
+      Train.find("ГРЗ-02").attach(CargoWagon.new(100))
+      routes.append(Route.new(Station.find("Голутвин"), Station.find("Курская")))
+      routes.last.add_station(Station.find("Луховицы"))
+      routes.last.add_station(Station.find("Кривандино"))
+      routes.append(Route.new(Station.find("Кривандино"), Station.find("Павловский Посад")))
+      routes.last.add_station(Station.find("Курская"))
+      routes.last.add_station(Station.find("Кусково"))
+      routes.last.add_station(Station.find("Реутово"))
+      routes.last.add_station(Station.find("Фрязево"))
+      routes.append(Route.new(Station.find("Голутвин"), Station.find("Серпухов")))
+      routes.last.add_station(Station.find("Кривандино"))
+      routes.last.add_station(Station.find("Кусково"))
+      routes.last.add_station(Station.find("Фрязево"))
+      routes.last.add_station(Station.find("Люблино-Сортировочное"))
+      routes.append(Route.new(Station.find("Голутвин"), Station.find("Серпухов")))
+      routes.last.add_station(Station.find("Реутово"))
+      routes.append(Route.new(Station.find("Кривандино"), Station.find("Люблино-Сортировочное")))
+      Train.find("ПАС-01").route = routes[0]
+      Train.find("ПАС-02").route = routes[1]
+      Train.find("ПАС-03").route = routes[2]
+      Train.find("ГРЗ-01").route = routes[3]
+      Train.find("ГРЗ-02").route = routes[4]
+      Train.find("ПАС-02").move_forward
+      Train.find("ПАС-03").move_forward
+      Train.find("ПАС-03").move_forward
+      Train.find("ПАС-03").move_forward
+      Train.find("ГРЗ-01").move_forward
+      Train.find("ГРЗ-01").move_forward
+      Train.find("ГРЗ-02").move_forward
+      puts "Тестовые данные созданы"
+      puts "Нажмите [Enter] для выхода..."
+      gets
+
     when "1"
       puts "Введите станции:"
       loop do
@@ -39,7 +105,7 @@ loop do
       end
 
     when "2"
-      puts "Введите пассажирские поезда:"
+      puts "Введите пассажирские поезда в формате XXX-XX:"
       loop do
         begin
           name = gets.chomp
@@ -52,7 +118,7 @@ loop do
         end
       end
 
-      puts "Введите грузовые поезда:"
+      puts "Введите грузовые поезда в формате XXX-XX:"
       loop do
         begin
           name = gets.chomp
@@ -71,9 +137,9 @@ loop do
       loop do
         name = gets.chomp
         break if name.empty?   # Признак окончания ввода списка станций
-        station = Station.all.select { |station| station.name == name }.first
+        station = Station.find(name)
         if !station
-          puts "ОШИБКА: Станция не найдена в общем списке"
+          puts "Станция не найдена"
         else
           buffer << station
         end
@@ -83,6 +149,8 @@ loop do
         buffer[1..buffer.size - 2].each { |name| routes.last.add_station(name) }
       rescue RuntimeError => ex
         puts ex.message
+        puts
+        puts "Нажмите [Enter] для выхода..."
         gets
       end
 
@@ -94,7 +162,7 @@ loop do
         break if name.empty?
         train = Train.find(name)
         break if train
-        puts "ОШИБКА: поезд не найден в общем списке"
+        puts "Поезд не найден"
       end
       if train
         puts "Введите номер маршрута (начиная с единицы):"
@@ -105,7 +173,7 @@ loop do
             train.route = routes[route - 1]
             break
           else
-            puts "ОШИБКА: маршрут не найден"
+            puts "Маршрут не найден"
           end
         end
       end
@@ -118,16 +186,17 @@ loop do
         break if name.empty?
         train = Train.find(name)
         break if train
-        puts "ОШИБКА: поезд не найден в общем списке"
+        puts "Поезд не найден"
       end
       if train
         puts "Введите количество прицепляемых вагонов:"
-        gets.chomp.to_i.times do
-          if train.class == CargoTrain
-            train.attach(CargoWagon.new)
-          elsif train.class == PassengerTrain
-            train.attach(PassengerWagon.new)
-          end
+        n = gets.to_i
+        if train.class == CargoTrain
+          puts "Введите объём каждого вагона:"
+          n.times { train.attach(CargoWagon.new(gets.to_i)) }
+        elsif train.class == PassengerTrain
+          puts "Введите количество мест для каждого вагона:"
+          n.times { train.attach(PassengerWagon.new(gets.to_i)) }
         end
       end
 
@@ -139,7 +208,7 @@ loop do
         break if name.empty?
         train = Train.find(name)
         break if train
-        puts "ОШИБКА: поезд не найден в общем списке"
+        puts "Поезд не найден"
       end
       if train
         puts "Введите количество отцепляемых вагонов:"
@@ -160,7 +229,7 @@ loop do
         break if name.empty?
         train = Train.find(name)
         break if train
-        puts "ОШИБКА: поезд не найден в общем списке"
+        puts "Поезд не найден"
       end
       if train
         puts "Маршрут:"
@@ -183,16 +252,61 @@ loop do
       end
 
     when "8"
-      Station.all.each do |station|
-        print station.name
-        station.trains.each do |train|
-          print " [#{train.name}]"
+      Station.all.each do |name, station|
+        puts "#{name}"
+        station.each_train do |train|
+          puts "    #{train.class} #{train.name} (#{train.wagons.size})"
+          train.each_wagon do |i, wagon|
+            puts "        #{wagon.class} #{i} (свободно #{wagon.free}, занято #{wagon.occupied})"
+          end
         end
-        puts
       end
+      puts
+      puts "Нажмите [Enter] для выхода..."
       gets
 
-    when "0"
+    when "9"
+      train = nil
+      puts "Введите название поезда:"
+      loop do
+        name = gets.chomp
+        break if name.empty?
+        train = Train.find(name)
+        break if train
+        puts "Поезд не найден"
+      end
+      if train
+        wagon = nil
+        puts "#{train.class} (#{train.wagons.size})"
+        puts "Введите номер вагона:"
+        loop do
+          number = gets.to_i
+          wagon = train.wagons[number - 1]
+          break if wagon
+          puts "Такого вагона нет"
+        end
+        case wagon.class.to_s
+          when "PassengerWagon"
+            begin
+              wagon.take
+            rescue RuntimeError => ex 
+              puts ex.message
+              puts "Нажмите [Enter] для выхода..."
+              gets
+            end
+          when "CargoWagon"
+            puts "Свободно #{wagon.free}"
+            puts "Введите загружаемый объём:"
+            begin
+              wagon.take(gets.to_i)
+            rescue RuntimeError => ex
+              puts ex.message
+              retry
+            end
+        end
+      end      
+
+    when "00"
       break
   end
 end

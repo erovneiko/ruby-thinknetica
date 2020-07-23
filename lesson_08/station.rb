@@ -5,14 +5,14 @@ class Station
 
   attr_reader :name
   attr_reader :trains
-  @@stations = []
+  @@stations = {}
 
   def initialize(name)
     @name = name
     @trains = []
     register_instance
     validate!
-    @@stations.append(self)
+    @@stations[name] = self
   end
 
   # Прибытие
@@ -34,6 +34,10 @@ class Station
     @@stations
   end
 
+  def self.find(name)
+    @@stations[name]
+  end
+
   def valid?
     validate!
     true
@@ -41,10 +45,14 @@ class Station
     false
   end
 
+  def each_train
+    @trains.each { |train| yield(train) }
+  end
+
   private
 
   def validate!
     raise "Не указано название станции" if name.empty?
-    raise "Такая станция уже существует" if @@stations.select { |station| station.name == name }.any?
+    raise "Такая станция уже существует" if @@stations[name]
   end
 end

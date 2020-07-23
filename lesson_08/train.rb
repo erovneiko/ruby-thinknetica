@@ -78,6 +78,10 @@ class Train
     false
   end
 
+  def each_wagon
+    @wagons.each.with_index(1) { |wagon, i| yield(i, wagon) }
+  end
+
   private
 
   def validate!
