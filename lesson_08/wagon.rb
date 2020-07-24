@@ -19,9 +19,3 @@ class Wagon
     @volume - @occupied
   end
 end
-
-class CargoWagon < Wagon
-end
-
-class PassengerWagon < Wagon
-end
