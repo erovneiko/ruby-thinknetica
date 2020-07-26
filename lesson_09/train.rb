@@ -1,5 +1,5 @@
-require_relative "manufacturer"
-require_relative "instance_counter"
+require_relative 'manufacturer'
+require_relative 'instance_counter'
 
 class Train
   include Manufacturer
@@ -7,7 +7,7 @@ class Train
 
   attr_reader :name
   attr_reader :wagons
-  attr_accessor :speed  # Набор скорости: speed = number
+  attr_accessor :speed # Набор скорости: speed = number
   attr_reader :route
   attr_reader :cur_station_index
   @@trains = {}
@@ -28,12 +28,12 @@ class Train
 
   # Прицепка вагона
   def attach(wagon)
-    @wagons << wagon if @speed == 0
+    @wagons << wagon if @speed.empty?
   end
 
   # Отцепка вагона
   def detach(wagon)
-    @wagons.delete(wagon) if @speed == 0
+    @wagons.delete(wagon) if @speed.empty?
   end
 
   # Назначение маршрута, прибытие на первую станцию
@@ -63,7 +63,7 @@ class Train
 
   # Возврат предыдущей, текущей и следующей станции
   def status
-    @route.stations[@cur_station_index-2..@cur_station_index]
+    @route.stations[@cur_station_index - 2..@cur_station_index]
   end
 
   # Объект поезда по его номеру
@@ -74,7 +74,7 @@ class Train
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
@@ -85,8 +85,8 @@ class Train
   private
 
   def validate!
-    raise "Не указан номер поезда" if name.empty?
-    raise "Недопустимый формат номера поезда" if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
-    raise "Такой поезд уже существует" if @@trains[name]
+    raise 'Не указан номер поезда' if name.empty?
+    raise 'Недопустимый формат номера поезда' if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
+    raise 'Такой поезд уже существует' if @@trains[name]
   end
 end

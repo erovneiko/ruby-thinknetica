@@ -1,4 +1,4 @@
-require_relative "instance_counter"
+require_relative 'instance_counter'
 
 class Route
   include InstanceCounter
@@ -24,13 +24,13 @@ class Route
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
   private
 
   def validate!
-    raise "В маршруте не может быть меньше двух станций" if @stations.first == @stations.last
+    raise 'В маршруте не может быть меньше двух станций' if @stations.first == @stations.last
   end
 end

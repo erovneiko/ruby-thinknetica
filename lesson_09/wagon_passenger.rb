@@ -1,4 +1,4 @@
-require_relative "wagon"
+require_relative 'wagon'
 
 class PassengerWagon < Wagon
   def take

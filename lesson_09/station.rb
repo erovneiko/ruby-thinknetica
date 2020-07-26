@@ -1,18 +1,20 @@
-require_relative "instance_counter"
+require_relative 'instance_counter'
 
 class Station
   include InstanceCounter
 
   attr_reader :name
-  attr_reader :trains
-  @@stations = {}
+  class << self
+    attr_reader :stations
+  end
+  @stations = {}
 
   def initialize(name)
     @name = name
     @trains = []
     register_instance
     validate!
-    @@stations[name] = self
+    self.class.stations[name] = self
   end
 
   # Прибытие
@@ -27,21 +29,22 @@ class Station
 
   def trains(type = nil)
     return @trains unless type
-    @trains.each { |t| t.type == type }    
+
+    @trains.map { |t| t.type == type }
   end
 
   def self.all
-    @@stations
+    @stations
   end
 
   def self.find(name)
-    @@stations[name]
+    @stations[name]
   end
 
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
@@ -52,7 +55,7 @@ class Station
   private
 
   def validate!
-    raise "Не указано название станции" if name.empty?
-    raise "Такая станция уже существует" if @@stations[name]
+    raise 'Не указано название станции' if name.empty?
+    raise 'Такая станция уже существует' if self.class.stations[name]
   end
 end
