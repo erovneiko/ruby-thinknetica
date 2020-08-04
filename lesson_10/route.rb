@@ -1,14 +1,20 @@
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Route
   include InstanceCounter
+  include Validation
 
   attr_reader :stations
+  
+  validate :stations, :type, Array
 
   def initialize(first, last)
     @stations = [first, last]
     register_instance
     validate!
+    raise 'В маршруте не может быть меньше двух станций' \
+      if @stations.first == @stations.last
   end
 
   # Добавление станции
@@ -19,18 +25,5 @@ class Route
   # Удаление станции
   def delete_station(station)
     @stations.delete(station)
-  end
-
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
-  private
-
-  def validate!
-    raise 'В маршруте не может быть меньше двух станций' if @stations.first == @stations.last
   end
 end

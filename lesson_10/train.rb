@@ -1,9 +1,11 @@
 require_relative 'manufacturer'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validation
 
   attr_reader :name
   attr_reader :wagons
@@ -12,12 +14,20 @@ class Train
   attr_reader :cur_station_index
   @@trains = {}
 
+  validate :name, :presence
+  validate :name, :format, /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
+  validate :name, :type, String
+
   def initialize(name)
     @name = name
     @wagons = []
     @speed = 0
     register_instance
+    puts name.inspect
     validate!
+    # raise 'Не указан номер поезда' if name.empty?
+    # raise 'Недопустимый формат номера поезда' if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
+    raise 'Такой поезд уже существует' if @@trains[name]
     @@trains[name] = self
   end
 
@@ -28,12 +38,12 @@ class Train
 
   # Прицепка вагона
   def attach(wagon)
-    @wagons << wagon if @speed.empty?
+    @wagons << wagon if @speed.zero?
   end
 
   # Отцепка вагона
   def detach(wagon)
-    @wagons.delete(wagon) if @speed.empty?
+    @wagons.delete(wagon) if @speed.zero?
   end
 
   # Назначение маршрута, прибытие на первую станцию
@@ -71,22 +81,7 @@ class Train
     @@trains[name]
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
   def each_wagon
     @wagons.each.with_index(1) { |wagon, i| yield(i, wagon) }
-  end
-
-  private
-
-  def validate!
-    raise 'Не указан номер поезда' if name.empty?
-    raise 'Недопустимый формат номера поезда' if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i
-    raise 'Такой поезд уже существует' if @@trains[name]
   end
 end

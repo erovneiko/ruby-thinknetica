@@ -1,7 +1,9 @@
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Station
   include InstanceCounter
+  include Validation
 
   attr_reader :name
   class << self
@@ -9,11 +11,16 @@ class Station
   end
   @stations = {}
 
+  validate :name, :presence
+  validate :name, :type, String
+
   def initialize(name)
     @name = name
     @trains = []
     register_instance
     validate!
+    # raise 'Не указано название станции' if name.empty?
+    raise 'Такая станция уже существует' if self.class.stations[name]
     self.class.stations[name] = self
   end
 
@@ -41,21 +48,7 @@ class Station
     @stations[name]
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
   def each_train
     @trains.each { |train| yield(train) }
-  end
-
-  private
-
-  def validate!
-    raise 'Не указано название станции' if name.empty?
-    raise 'Такая станция уже существует' if self.class.stations[name]
   end
 end

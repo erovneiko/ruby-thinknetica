@@ -12,7 +12,6 @@ class Wagon
 
   def take(volume = 1)
     raise 'Недостаточно свободного места' if volume > free
-
     @occupied += volume
   end
 
