@@ -23,7 +23,6 @@ class Train
     @wagons = []
     @speed = 0
     register_instance
-    puts name.inspect
     validate!
     # raise 'Не указан номер поезда' if name.empty?
     # raise 'Недопустимый формат номера поезда' if name !~ /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}$/i

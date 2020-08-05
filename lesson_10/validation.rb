@@ -17,24 +17,28 @@ module Validation
   end
 
   module InstanceMethods
+    def presence(name, param)
+      attr_value = instance_variable_get("@#{name}".to_sym)
+      raise "Пустое значение" \
+        if attr_value.nil? || attr_value.to_s.empty?
+    end
+
+    def format(name, param)
+      raise "Неправильный формат" \
+        if instance_variable_get("@#{name}".to_sym) !~ param
+    end
+
+    def type(name, param)
+      raise "Неправильный класс" \
+        if instance_variable_get("@#{name}".to_sym).class != param
+    end
+
     def validate!
       # puts self.class.class_variable_get(:@@validations).inspect
       return unless self.class.class_variable_defined?(:@@validations)
       self.class.class_variable_get(:@@validations).each do |value|
-        attr_name = "@#{value[:name]}".to_sym
-        attr_value = instance_variable_get(attr_name)
-        case value[:type]
-        when :presence
-          raise "Пустое значение" \
-            if attr_value.nil? || attr_value.to_s.empty?
-        when :format
-          raise "Неправильный формат" \
-            if attr_value !~ value[:param]
-        when :type
-          raise "Неправильный класс" \
-            if attr_value.class != value[:param]
-        end
-      end        
+        send value[:type], value[:name], value[:param]
+      end
     end
 
     def valid?
